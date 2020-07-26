@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import numpy as np
 import matplotlib as mpl
@@ -36,8 +38,11 @@ def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
     # two-dimensionl dataset.
     ell_radius_x = np.sqrt(1 + pearson)
     ell_radius_y = np.sqrt(1 - pearson)
-    ellipse = mpl.patches.Ellipse((0, 0), width=ell_radius_x * 2, height=ell_radius_y * 2,
-                      facecolor=facecolor, **kwargs)
+    ellipse = mpl.patches.Ellipse(
+        (0, 0),
+        width=ell_radius_x * 2, height=ell_radius_y * 2,
+        facecolor=facecolor, **kwargs
+    )
 
     # Calculating the stdandard deviation of x from
     # the squareroot of the variance and multiplying
@@ -54,8 +59,9 @@ def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
         .scale(scale_x, scale_y) \
         .translate(mean_x, mean_y)
 
-    ax.plot([mean_x], [mean_y],
-     '*', color='yellow', markersize=20, markeredgecolor='black')
+    ax.plot([mean_x], [mean_y], '*',
+            color='yellow', markersize=20,
+            markeredgecolor='black')
     
     ellipse.set_transform(transf + ax.transData)
     return ax.add_patch(ellipse)
@@ -98,17 +104,35 @@ def load_databases(filename, data_directories):
     # Define an empty database to load the files into
     database = pd.DataFrame()
 
+    def _load_db(db_path, group, label):
+        """Helper function to load a database and assign group + label
+        columns
+        """
+        db = pd.read_hdf(db_path + ".h5", key='df')
+        db['Group'] = group
+        db['Label'] = label
+        return db
+
     print("{:20} | {:10} | {:10}".format('Group', 'N', 'Label'))
     print("-"*42)
     # Loop through the directories to load each database
     for i, directory in enumerate(data_directories):
-        db = pd.read_hdf(directory + filename + ".h5", key='df')
         # The name of the folder becomes the name of the group
-        group = directory.split('/')[-2].lower()
-        db['Group'] = group
-        db['Label'] = i + 1
-        database = pd.concat([database, db])
+        group = os.path.split(directory)[-1].lower()
+
+        try:
+            # Try to load Pandas Dataframe from directory
+            db_path = os.path.join(directory, filename)
+            db = _load_db(db_path, group, i + 1)
+            database = pd.concat([database, db])
+        except IOError:
+            # Look in sub directories if not database file is present
+            for folder in os.listdir(directory):
+                db_path = os.path.join(directory, folder, filename)
+                db = _load_db(db_path, group, i + 1)
+                database = pd.concat([database, db])
         
-        print("{:<20} | {:<10} | {:<10}".format(group, db.shape[0], i+1))
+        print("{:<20} | {:<10} | {:<10}".format(
+            group, len(database['Group'] == group), i+1))
 
     return database
