@@ -20,7 +20,8 @@ def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
         The axes object to draw the ellipse into.
 
     n_std : float
-        The number of standard deviations to determine the ellipse's radiuses.
+        The number of standard deviations to determine the ellipse's
+        radii.
 
     **kwargs
         Forwarded to `~matplotlib.patches.Ellipse`
@@ -40,7 +41,8 @@ def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
     ell_radius_y = np.sqrt(1 - pearson)
     ellipse = mpl.patches.Ellipse(
         (0, 0),
-        width=ell_radius_x * 2, height=ell_radius_y * 2,
+        width=ell_radius_x * 2,
+        height=ell_radius_y * 2,
         facecolor=facecolor, **kwargs
     )
 
@@ -67,7 +69,9 @@ def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
     return ax.add_patch(ellipse)
     
 
-def scatter(array, colors, sizes, ellipse=True, marker='o', alpha=0.7, fig=None, ax=None, cb=None):
+def scatter(array, colors, sizes,
+            ellipse=True, marker='o', alpha=0.7,
+            fig=None, ax=None, cb=None):
     
     N = np.unique(colors).size
     cmap = plt.cm.jet
@@ -88,7 +92,7 @@ def scatter(array, colors, sizes, ellipse=True, marker='o', alpha=0.7, fig=None,
 
     if ellipse:
         for label in range(1, N+1):
-            indices = np.where(colors==label)
+            indices = np.where(colors == label)
             values = array[indices]
             confidence_ellipse(values[:, 0], values[:, 1], ax, n_std=1.0, 
                                edgecolor='red', linestyle='dashed')
