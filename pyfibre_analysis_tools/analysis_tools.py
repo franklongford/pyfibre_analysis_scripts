@@ -64,30 +64,31 @@ def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
     ax.plot([mean_x], [mean_y], '*',
             color='yellow', markersize=20,
             markeredgecolor='black')
-    
+
     ellipse.set_transform(transf + ax.transData)
     return ax.add_patch(ellipse)
-    
+
 
 def scatter(array, colors, sizes,
             ellipse=True, marker='o', alpha=0.7,
             fig=None, ax=None, cb=None):
-    
+
     N = np.unique(colors).size
     cmap = plt.cm.jet
     bounds = np.linspace(1, N, N+1)
-    
+
     if N > 1:
         cmaplist = [cmap(i) for i in range(cmap.N)]
         cmap = cmap.from_list('Custom cmap', cmaplist, cmap.N)
         norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
-    else: norm = None
-    
+    else:
+        norm = None
+
     if fig is None:
-        fig, ax = plt.subplots(1,1, figsize=(10,8))
-        
+        fig, ax = plt.subplots(1, 1, figsize=(10, 8))
+
     scat = ax.scatter(
-        array[:,0], array[:,1], c=colors, s=sizes*80,
+        array[:, 0], array[:, 1], c=colors, s=sizes*80,
         alpha=alpha, cmap=cmap, norm=norm, marker=marker)
 
     if ellipse:
@@ -96,15 +97,15 @@ def scatter(array, colors, sizes,
             values = array[indices]
             confidence_ellipse(values[:, 0], values[:, 1], ax, n_std=1.0, 
                                edgecolor='red', linestyle='dashed')
-    
+
     if cb is None:
         cb = plt.colorbar(scat, spacing='proportional', ticks=bounds)
-    
+
     return fig, ax, cb
 
 
 def load_databases(filename, data_directories):
-    
+
     # Define an empty database to load the files into
     database = pd.DataFrame()
 
@@ -118,7 +119,7 @@ def load_databases(filename, data_directories):
         return db
 
     print("{:20} | {:10} | {:10}".format('Group', 'N', 'Label'))
-    print("-"*42)
+    print("-" * 42)
     # Loop through the directories to load each database
     for i, directory in enumerate(data_directories):
         # The name of the folder becomes the name of the group
