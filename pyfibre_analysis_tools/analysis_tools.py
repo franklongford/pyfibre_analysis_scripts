@@ -74,8 +74,10 @@ def scatter(array, colors, sizes,
             fig=None, ax=None, cb=None):
 
     N = np.unique(colors).size
+    max_n = np.max(colors)
+    min_n = np.min(colors)
     cmap = plt.cm.jet
-    bounds = np.linspace(1, N, N+1)
+    bounds = np.linspace(1, max_n, max_n+1)
 
     if N > 1:
         cmaplist = [cmap(i) for i in range(cmap.N)]
@@ -92,7 +94,7 @@ def scatter(array, colors, sizes,
         alpha=alpha, cmap=cmap, norm=norm, marker=marker)
 
     if ellipse:
-        for label in range(1, N+1):
+        for label in range(min_n, max_n+1):
             indices = np.where(colors == label)
             values = array[indices]
             confidence_ellipse(values[:, 0], values[:, 1], ax, n_std=1.0, 
