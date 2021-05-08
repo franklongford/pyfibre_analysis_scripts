@@ -48,7 +48,6 @@ class TestAnalysisTools(TestCase):
         data_dir, filename = os.path.split(example_hdf5_path)
 
         database = load_databases(filename, [data_dir])
-
         self.assertEqual(1, len(database))
 
         for key, value in self.expected_data.items():
@@ -57,12 +56,15 @@ class TestAnalysisTools(TestCase):
                     self.assertEqual(value, database.iloc[0][key])
                 else:
                     self.assertAlmostEqual(value, database.iloc[0][key])
+
+        filename, ext = os.path.splitext(filename)
+        database = load_databases(filename, [data_dir], ext=ext)
+        self.assertEqual(1, len(database))
 
     def test_load_databases_xls(self):
         data_dir, filename = os.path.split(example_excel_path)
 
         database = load_databases(filename, [data_dir])
-
         self.assertEqual(1, len(database))
 
         for key, value in self.expected_data.items():
@@ -72,3 +74,6 @@ class TestAnalysisTools(TestCase):
                 else:
                     self.assertAlmostEqual(value, database.iloc[0][key])
 
+        filename, ext = os.path.splitext(filename)
+        database = load_databases(filename, [data_dir], ext=ext)
+        self.assertEqual(1, len(database))
