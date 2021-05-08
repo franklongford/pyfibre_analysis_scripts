@@ -121,7 +121,7 @@ def load_databases(filename, data_directories, ext=None):
         if db_path.endswith('.h5'):
             db = pd.read_hdf(db_path, key='df')
         elif db_path.endswith('.xls'):
-            db = pd.read_excel(db_path, key='df')
+            db = pd.read_excel(db_path)
         db['Group'] = group
         db['Label'] = label
         return db
