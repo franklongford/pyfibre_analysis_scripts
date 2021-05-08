@@ -106,13 +106,15 @@ def scatter(array, colors, sizes,
     return fig, ax, cb
 
 
-def load_databases(filename, data_directories, ext=None):
+def load_databases(filename, data_directories, ext='.h5'):
 
     # Define an empty database to load the files into
     database = pd.DataFrame()
 
-    if ext is not None and not filename.endswith(ext):
-        filename += ext
+    name, _ext = os.path.splitext(filename)
+    if not _ext:
+        if ext is not None:
+            filename += ext
 
     def _load_db(db_path, group, label):
         """Helper function to load a database and assign group + label
