@@ -106,16 +106,22 @@ def scatter(array, colors, sizes,
     return fig, ax, cb
 
 
-def load_databases(filename, data_directories):
+def load_databases(filename, data_directories, ext=None):
 
     # Define an empty database to load the files into
     database = pd.DataFrame()
+
+    if ext is not None and not filename.endswith(ext):
+        filename += ext
 
     def _load_db(db_path, group, label):
         """Helper function to load a database and assign group + label
         columns
         """
-        db = pd.read_hdf(db_path + ".h5", key='df')
+        if db_path.endswith('.h5'):
+            db = pd.read_hdf(db_path, key='df')
+        elif db_path.endswith('.xls'):
+            db = pd.read_excel(db_path)
         db['Group'] = group
         db['Label'] = label
         return db
@@ -138,7 +144,7 @@ def load_databases(filename, data_directories):
                 db_path = os.path.join(directory, folder, filename)
                 db = _load_db(db_path, group, i + 1)
                 database = pd.concat([database, db])
-        
+
         print("{:<20} | {:<10} | {:<10}".format(
             group, len(database['Group'] == group), i+1))
 
