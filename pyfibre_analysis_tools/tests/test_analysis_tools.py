@@ -58,7 +58,7 @@ class TestAnalysisTools(TestCase):
                     self.assertAlmostEqual(value, database.iloc[0][key])
 
         filename, ext = os.path.splitext(filename)
-        database = load_databases(filename, [data_dir], ext=ext)
+        database = load_databases(filename, [data_dir])
         self.assertEqual(1, len(database))
 
     def test_load_databases_xls(self):
@@ -75,5 +75,5 @@ class TestAnalysisTools(TestCase):
                     self.assertAlmostEqual(value, database.iloc[0][key])
 
         filename, ext = os.path.splitext(filename)
-        database = load_databases(filename, [data_dir], ext=ext)
+        database = load_databases(filename, [data_dir], ext='.xls')
         self.assertEqual(1, len(database))
