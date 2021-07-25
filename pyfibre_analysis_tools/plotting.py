@@ -157,6 +157,9 @@ def plot_roc_curve(tprs, aucs, tag=''):
     """Creates a ROC figure to display from a set of true positive
     result and area under the curve values
 
+    Adapted from scikit learn example:
+    https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc_crossval.html#sphx-glr-auto-examples-model-selection-plot-roc-crossval-py
+
     Parameters
     ----------
     tprs, aucs: array-like
