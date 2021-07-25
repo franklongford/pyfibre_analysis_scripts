@@ -1,7 +1,6 @@
 import os
 
 import pandas as pd
-import numpy as np
 
 
 def load_databases(filename, data_directories, ext='.h5'):
